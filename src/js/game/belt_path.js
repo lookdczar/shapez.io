@@ -788,11 +788,11 @@ export class BeltPath extends BasicSerializableObject {
                 assert(
                     lastDistance >= 0.0,
                     "Last item distance mismatch: " +
-                        lastDistance +
-                        " -> Total length was " +
-                        this.totalLength +
-                        " and lastItemOffset was " +
-                        lastItemOffset
+                    lastDistance +
+                    " -> Total length was " +
+                    this.totalLength +
+                    " and lastItemOffset was " +
+                    lastItemOffset
                 );
 
                 DEBUG &&
@@ -1382,6 +1382,8 @@ export class BeltPath extends BasicSerializableObject {
 
         let trackPos = 0.0;
 
+        //tip 一条路径由若干个belt entity组成，从每个belt comp中获取每个belt的长度作为整个path的总长度
+        //belt和item的位置，由belt末端/item末端距离path起始点的距离表示
         // Iterate whole track and check items
         for (let i = 0; i < this.entityPath.length; ++i) {
             const entity = this.entityPath[i];
@@ -1389,6 +1391,7 @@ export class BeltPath extends BasicSerializableObject {
             const beltLength = beltComp.getEffectiveLengthTiles();
 
             // Check if the current items are on the belt
+            //tip 计算当前这个belt的末端位置是否大于当前item的位置，如果大于，说明这个item位于这个belt上
             while (trackPos + beltLength >= currentItemPos - 1e-5) {
                 // It's on the belt, render it now
                 const staticComp = entity.components.StaticMapEntity;
